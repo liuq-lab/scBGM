@@ -13,24 +13,28 @@ sources and train the models with the commands below.
 
 ## How it works
 
-1. **Autoencoder.** A negative-binomial (NB) autoencoder maps raw UMI counts to a
-   128-dimensional latent space and decodes latents back to counts given a library size.
-2. **Generator.** A generator maps a standard-normal prior draw *z* (plus a label or
-   time embedding for conditional models) to a Gaussian, with a mean and a diagonal
-   variance, over the standardized AE latent.
-3. **Step 1, warm start.** The generator is initialized with adversarial training,
-   together with an encoder and latent/data discriminators.
-4. **Step 2, refinement.** Each training cell gets its own latent variable. Training
-   alternates between updating the generator (Gaussian likelihood + MMD between
-   generated and real latents + a variance regularizer) and updating the per-cell
-   latents under a maximum a posteriori objective.
-5. **Checkpoint selection.** Step 1 and Step 2 checkpoints are selected on the
-   validation split by iLISI between generated and real cells (per-class macro iLISI
-   for conditional models). The test split is never read during training.
-6. **Generation.** Prior draws are passed through the generator, a library size is
-   sampled from a model fitted on the training cells, and the AE decoder samples NB
-   counts.
+1. **Train the autoencoder.** The NB autoencoder is trained on the raw UMI counts
+   of the training cells. Its encoder maps each cell to a 128-dimensional latent,
+   and its decoder maps a latent and a library size back to NB counts. The
+   autoencoder is then frozen. The latents of the training cells, standardized per
+   dimension, are the data the generator learns.
+2. **Train the generator, Step 1 (warm start).** The generator maps a
+   standard-normal draw *z* (plus a label or time embedding in conditional models)
+   to a Gaussian over the standardized latent, with a mean and a diagonal variance.
+   It is first trained adversarially, together with an encoder from latents back
+   to *z* and two discriminators, one on *z* and one on the latents. This encoder
+   gives each training cell an initial *z*.
+3. **Train the generator, Step 2 (refinement).** Each training cell keeps its own
+   *z*. Training alternates two updates: the generator is updated with a Gaussian
+   likelihood, an MMD term between generated and real latents and a variance
+   regularizer; each cell's *z* is updated under a maximum a posteriori objective.
+4. **Generate cells.** Draw *z* from the prior, sample a latent from the
+   generator's Gaussian and undo the standardization. Then draw a library size
+   from the training cells and sample NB counts with the AE decoder.
 
+The checkpoints of Steps 1 and 2 are selected on the validation split by iLISI
+between generated and real cells (per-class macro iLISI for conditional models).
+The test split is never read during training.
 
 ## Installation
 
