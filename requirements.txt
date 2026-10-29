@@ -1,0 +1,21 @@
+# TensorFlow and PyTorch both run on CPU; add `--device cuda` on a compatible GPU node.
+tensorflow-macos==2.15.0 ; sys_platform == 'darwin' and platform_machine == 'arm64'
+tensorflow==2.15.0 ; sys_platform != 'darwin' or platform_machine != 'arm64'
+tensorflow-probability==0.23.0
+keras==2.15.0
+torch==2.5.1
+numpy==1.26.4
+scipy==1.13.1
+pandas==2.0.3
+anndata==0.10.9
+scanpy==1.10.3
+scib==1.1.7
+scikit-learn==1.6.1
+scikit-misc==0.3.1
+numba==0.60.0
+umap-learn==0.5.7
+pynndescent==0.6.0
+h5py==3.14.0
+matplotlib==3.9.4
+igraph==1.0.0
+leidenalg==0.12.0

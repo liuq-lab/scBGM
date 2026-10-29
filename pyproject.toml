@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "scbgm"
+version = "0.4.1"
+description = "scBGM: Bayesian generative modeling for single-cell RNA-seq data"
+readme = "README.md"
+requires-python = ">=3.9,<3.12"
+dependencies = []
+
+[project.optional-dependencies]
+data = ["anndata==0.10.9", "scanpy==1.10.3", "scikit-misc", "scikit-learn", "scipy", "numpy", "pandas"]
+
+[project.scripts]
+scbgm = "scbgm.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["scbgm*"]
+
+[tool.setuptools.package-data]
+scbgm = ["models/bayesgm/LICENSE", "models/README.md"]

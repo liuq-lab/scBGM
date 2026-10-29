@@ -1,0 +1,5 @@
+recursive-include scbgm *.py *.json *.R *.md LICENSE
+recursive-include docs *
+recursive-include tests *.py
+
+include requirements.txt
